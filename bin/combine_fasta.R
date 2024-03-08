@@ -3,7 +3,7 @@ library(optparse)
 
 option_list <- list(
   make_option(c("--acc_file"),
-              type = "character", default = NULL,
+              type = "character", default = "tests/acclist.csv",
               help = "Path to csv file with accession numbers.\n Headers: geneID, bait"
   ),
   make_option(c("--fasta_dir"),
@@ -29,10 +29,9 @@ getFasta(query_url, outfile = file.path(opt$fasta_dir, "query"))
 # Reads the fasta file and creates combinations of proteins
 fasta <- read.fasta(file.path(opt$fasta_dir, "query.fasta"), seqtype = "AA", as.string = TRUE, set.attributes = FALSE) |>
   setNames(acclist[[1]])
-combs <- expand.grid(acclist[acclist[[2]] == TRUE, "geneID"], acclist[acclist[[2]] == FALSE, 1])
+combs <- expand.grid(acclist[acclist[[2]] == TRUE, "geneID"], acclist[acclist[[2]] == FALSE, 1], stringsAsFactors = FALSE)
 combs$combined <- paste(combs$Var1, combs$Var2, sep = "-")
-fast_out <- mapply(\(x,y) {paste(fasta[x], fasta[y], sep = ":")}, combs$Var1, combs$Var2,
-                   SIMPLIFY = FALSE) |>
+fast_out <- mapply(\(x,y) {paste(fasta[[x]], fasta[[y]], sep = ":")}, combs$Var1, combs$Var2, SIMPLIFY = FALSE) |>
   setNames(combs$combined)
 
 for (i in seq_along(fast_out)) {

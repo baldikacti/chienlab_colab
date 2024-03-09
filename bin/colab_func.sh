@@ -12,6 +12,6 @@ source chienlab_colab.config
 
 fname=$(basename "$1" .fasta)
 apptainer run --nv \
-  -B ${AFOLD_CACHE}:/cache -B ${WORKDIR}:/work \
+  -B ${AFOLD_CACHE}:/cache \
   $COLABFOLD_CONTAINER \
-  colabfold_batch /work/$1 /work/results/$fname --msa-mode 'mmseqs2_uniref_env'
+  colabfold_batch $1 results/$fname --msa-mode 'mmseqs2_uniref_env'

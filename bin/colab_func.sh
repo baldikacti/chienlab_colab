@@ -15,3 +15,6 @@ apptainer run --nv \
   -B ${AFOLD_CACHE}:/cache \
   $COLABFOLD_CONTAINER \
   colabfold_batch $1 results/$fname --msa-mode 'mmseqs2_uniref_env'
+  
+# Cleanup downloaded fasta
+rm $1
